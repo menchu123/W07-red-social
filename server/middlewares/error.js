@@ -1,4 +1,4 @@
-const debug = require("debug")("series:errors");
+const debug = require("debug")("social:errors");
 const chalk = require("chalk");
 const { ValidationError } = require("express-validation");
 
