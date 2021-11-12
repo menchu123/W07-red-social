@@ -1,4 +1,4 @@
-const debug = require("debug")("series:errors");
+const debug = require("debug")("social:errors");
 const chalk = require("chalk");
 const { ValidationError } = require("express-validation");
 
@@ -6,6 +6,7 @@ const notFoundErrorHandler = (req, res) => {
   res.status(404).json({ error: "Sorry, endpoint not found" });
 };
 
+// eslint-disable-next-line no-unused-vars
 const errorHandler = (error, req, res, next) => {
   debug(chalk.red("An error has occurred: ", error.message));
   if (error instanceof ValidationError) {

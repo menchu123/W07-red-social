@@ -1,11 +1,8 @@
 const express = require("express");
 const chalk = require("chalk");
 const morgan = require("morgan");
-const debug = require("debug")("series:server");
+const debug = require("debug")("social:server");
 const cors = require("cors");
-const userRoutes = require("./routes/userRoutes");
-
-const { notFoundErrorHandler, errorHandler } = require("./middlewares/error");
 
 const app = express();
 app.use(cors());
@@ -33,10 +30,5 @@ const initializeServer = (port) =>
 
 app.use(morgan("dev"));
 app.use(express.json());
-
-app.use("/users", userRoutes);
-
-app.use(notFoundErrorHandler);
-app.use(errorHandler);
 
 module.exports = { initializeServer, app };
