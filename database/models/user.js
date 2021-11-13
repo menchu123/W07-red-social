@@ -13,9 +13,8 @@ const userSchema = new Schema({
     type: String,
     required: true,
   },
-  image: {
+  photo: {
     type: String,
-    required: true,
   },
   enemies: {
     type: [Types.ObjectId],
@@ -27,8 +26,11 @@ const userSchema = new Schema({
     ref: "Users",
     required: true,
   },
+  bio: {
+    type: String,
+  },
 });
 
-const User = model("User", userSchema, "users");
+const User = model("User", userSchema, "Users");
 
 module.exports = User;
