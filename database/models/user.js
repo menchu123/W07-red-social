@@ -13,7 +13,7 @@ const userSchema = new Schema({
     type: String,
     required: true,
   },
-  image: {
+  photo: {
     type: String,
     required: true,
   },
@@ -25,6 +25,10 @@ const userSchema = new Schema({
   friends: {
     type: [Types.ObjectId],
     ref: "Users",
+    required: true,
+  },
+  bio: {
+    type: String,
     required: true,
   },
 });
