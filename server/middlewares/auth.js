@@ -15,8 +15,9 @@ const auth = (req, res, next) => {
       next(error);
     } else {
       try {
-        const { id, username, admin } = jwt.verify(token, process.env.SECRET);
-        req.userInfo = { id, username, admin };
+        const userData = jwt.verify(token, process.env.SECRET);
+        req.userId = userData.id;
+        req.userName = userData.name;
         next();
       } catch (error) {
         error.message = "Token no valid";
