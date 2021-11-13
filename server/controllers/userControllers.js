@@ -47,8 +47,8 @@ const userSignUp = async (req, res, next) => {
   } else {
     newUser.friends = [];
     newUser.enemies = [];
-    newUser.photo = "";
-    newUser.bio = "";
+    newUser.photo = newUser.photo ? newUser.photo : "";
+    newUser.bio = newUser.bio ? newUser.bio : "";
     newUser.password = await bcrypt.hash(newUser.password, 10);
     User.create(newUser);
     res.json(newUser);
