@@ -61,4 +61,22 @@ const getUsers = async (req, res) => {
   res.json(users);
 };
 
-module.exports = { userLogin, userSignUp, getUsers };
+const getUserById = async (req, res, next) => {
+  const { id } = req.params;
+  try {
+    const searchedUser = await User.findById(id);
+    if (searchedUser) {
+      res.json(searchedUser);
+    } else {
+      const error = new Error("User not found");
+      error.code = 404;
+      next(error);
+    }
+  } catch (error) {
+    error.code = 400;
+    error.message = "Bad Request!";
+    next(error);
+  }
+};
+
+module.exports = { userLogin, userSignUp, getUsers, getUserById };

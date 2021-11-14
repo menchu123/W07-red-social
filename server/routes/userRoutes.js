@@ -6,6 +6,7 @@ const {
   userLogin,
   userSignUp,
   getUsers,
+  getUserById,
 } = require("../controllers/userControllers");
 const {
   userLoginRequestSchema,
@@ -17,5 +18,6 @@ const router = express.Router();
 router.post("/login", validate(userLoginRequestSchema), userLogin);
 router.post("/register", validate(userSignUpRequestSchema), userSignUp);
 router.get("/", auth, getUsers);
+router.get("/:id", auth, getUserById);
 
 module.exports = router;

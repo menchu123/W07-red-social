@@ -140,7 +140,7 @@ describe("Given a /users router,", () => {
   });
 
   describe("When it gets a GET request for /users", () => {
-    test("Then it should send a response with an array of robots and a status code of 200", async () => {
+    test("Then it should send a response with an array of users and a status code of 200", async () => {
       const { body } = await request
         .get("/users")
         .set("Authorization", `Bearer ${token}`)
@@ -171,6 +171,57 @@ describe("Given a /users router,", () => {
       expect(body).toHaveLength(expectedLength);
       expect(body).toContainEqual(expectedUser1);
       expect(body).toContainEqual(expectedUser2);
+    });
+  });
+
+  describe("When it gets a GET request for /users/:id with an existing id", () => {
+    test("Then it should send a response the corresponding user a status code of 200", async () => {
+      const { body } = await request
+        .get("/users/6191001dd184431e7f1983ec")
+        .set("Authorization", `Bearer ${token}`)
+        .expect(200);
+
+      const expectedUser = {
+        name: "Elsa",
+        password: passwords[0],
+        username: "elsithecroc",
+        photo: "",
+        bio: "",
+        id: "6191001dd184431e7f1983ec",
+        enemies: [],
+        friends: [],
+      };
+
+      expect(body).toEqual(expectedUser);
+    });
+  });
+
+  describe("When it gets a GET request for /users/:id with an unknown id", () => {
+    test("Then it should respond with a 'User not found' error", async () => {
+      const { body } = await request
+        .get("/users/61855f4ba99aeba4d99148f5")
+        .set("Authorization", `Bearer ${token}`)
+        .expect(404);
+
+      const expectedError = {
+        error: "User not found",
+      };
+
+      expect(body).toEqual(expectedError);
+    });
+  });
+  describe("When it gets a GET request for /users/:id without an id", () => {
+    test("Then it should respond with a 'Bad request' error", async () => {
+      const { body } = await request
+        .get("/users/noid")
+        .set("Authorization", `Bearer ${token}`)
+        .expect(400);
+
+      const expectedError = {
+        error: "Bad Request!",
+      };
+
+      expect(body).toEqual(expectedError);
     });
   });
 });
