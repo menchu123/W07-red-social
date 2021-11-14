@@ -14,6 +14,8 @@ jest.setTimeout(20000);
 const request = supertest(app);
 
 let server;
+let token;
+let passwords;
 
 beforeAll(async () => {
   await initializeDB(process.env.MONGODB_STRING_TEST);
@@ -21,14 +23,34 @@ beforeAll(async () => {
 });
 
 beforeEach(async () => {
+  const testUsers = [
+    {
+      name: "Elsa",
+      password: await bcrypt.hash("damedecome", 10),
+      username: "elsithecroc",
+      photo: "",
+      bio: "",
+      _id: "6191001dd184431e7f1983ec",
+    },
+    {
+      name: "Albert",
+      password: await bcrypt.hash("damedecome", 10),
+      username: "albertnotacroc",
+      photo: "",
+      bio: "",
+      _id: "6191006acd481ec6da9ce256",
+    },
+  ];
+
+  passwords = [testUsers[0].password, testUsers[1].password];
   await User.deleteMany();
-  await User.create({
-    name: "Elsa",
-    password: await bcrypt.hash("damedecome", 10),
-    username: "elsithecroc",
-    photo: "",
-    bio: "",
-  });
+  await User.create(testUsers[0]);
+  await User.create(testUsers[1]);
+  const loginResponse = await request
+    .post("/users/login")
+    .send({ username: "elsithecroc", password: "damedecome" })
+    .expect(200);
+  token = loginResponse.body.token;
 });
 
 afterAll(async () => {
@@ -114,6 +136,41 @@ describe("Given a /users router,", () => {
       };
 
       expect(body).toEqual(expectedError);
+    });
+  });
+
+  describe("When it gets a GET request for /users", () => {
+    test("Then it should send a response with an array of robots and a status code of 200", async () => {
+      const { body } = await request
+        .get("/users")
+        .set("Authorization", `Bearer ${token}`)
+        .expect(200);
+
+      const expectedLength = 2;
+      const expectedUser1 = {
+        name: "Elsa",
+        password: passwords[0],
+        username: "elsithecroc",
+        photo: "",
+        bio: "",
+        enemies: [],
+        friends: [],
+        id: "6191001dd184431e7f1983ec",
+      };
+
+      const expectedUser2 = {
+        name: "Albert",
+        password: passwords[1],
+        username: "albertnotacroc",
+        photo: "",
+        bio: "",
+        enemies: [],
+        friends: [],
+        id: "6191006acd481ec6da9ce256",
+      };
+      expect(body).toHaveLength(expectedLength);
+      expect(body).toContainEqual(expectedUser1);
+      expect(body).toContainEqual(expectedUser2);
     });
   });
 });
