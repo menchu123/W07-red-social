@@ -55,4 +55,10 @@ const userSignUp = async (req, res, next) => {
   }
 };
 
-module.exports = { userLogin, userSignUp };
+const getUsers = async (req, res) => {
+  debug(chalk.yellowBright("Loading users"));
+  const users = await User.find();
+  res.json(users);
+};
+
+module.exports = { userLogin, userSignUp, getUsers };
