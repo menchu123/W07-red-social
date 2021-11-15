@@ -51,7 +51,7 @@ const userSignUp = async (req, res, next) => {
     newUser.bio = newUser.bio ? newUser.bio : "";
     newUser.password = await bcrypt.hash(newUser.password, 10);
     User.create(newUser);
-    res.json(newUser);
+    res.json().status(200);
   }
 };
 
