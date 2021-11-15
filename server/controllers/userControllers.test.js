@@ -8,6 +8,13 @@ jest.mock("../../database/models/user");
 jest.mock("bcrypt");
 jest.mock("jsonwebtoken");
 
+const mockResponse = () => {
+  const res = {};
+  res.status = jest.fn().mockReturnValue(res);
+  res.json = jest.fn().mockReturnValue(res);
+  return res;
+};
+
 describe("Given an userLogin function", () => {
   describe("When it receives a request with an incorrect username", () => {
     test("Then it should invoke the next function with an error", async () => {
@@ -121,7 +128,7 @@ describe("Given an userSignUp function", () => {
   });
 
   describe("When it receives a request with a new username", () => {
-    test("Then it should respond with the new user", async () => {
+    test("Then it should respond with a 200 status", async () => {
       const userTest = {
         name: "Luis",
         username: "luis",
@@ -132,15 +139,14 @@ describe("Given an userSignUp function", () => {
         body: userTest,
       };
 
-      const res = {
-        json: jest.fn(),
-      };
+      const res = mockResponse();
 
       User.findOne = jest.fn().mockResolvedValue(false);
 
       await userSignUp(req, res);
 
-      expect(res.json).toHaveBeenCalledWith(userTest);
+      expect(res.json).toHaveBeenCalled();
+      expect(res.status).toHaveBeenCalledWith(200);
     });
   });
 });

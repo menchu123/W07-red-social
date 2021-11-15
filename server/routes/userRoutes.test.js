@@ -106,8 +106,8 @@ describe("Given a /users router,", () => {
   });
 
   describe("When it gets a POST request for /users/register with all the required fields", () => {
-    test("Then it should send a response with the new user and a status code of 200", async () => {
-      const { body } = await request
+    test("Then it should send a response with a status code of 200", async () => {
+      await request
         .post("/users/register")
         .send({
           username: "newuser",
@@ -115,8 +115,6 @@ describe("Given a /users router,", () => {
           name: "El nuevo",
         })
         .expect(200);
-
-      expect(body).toHaveProperty("name", "El nuevo");
     });
   });
 
